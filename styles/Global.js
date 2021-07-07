@@ -48,5 +48,14 @@ export const GlobalStyle = StyleSheet.create({
     alignItems: "center",
     height:"100%",
     width:"100%",
-  }
+  },HeadTextRegister:{
+    fontStyle: "italic",
+    fontSize: 20,
+    textAlign: "center",
+    fontWeight: 700,
+    fontFamily: 'sans-serif'
+
+    
+  },
+
 });

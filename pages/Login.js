@@ -35,7 +35,7 @@ export const Login = ({ navigation }) => {
         color="#dc143c"
         onPress={onPressHandle2}
       />
-      <Text>{"\n"}</Text>
+      <br/>
       <AppButton
         style={GlobalStyle.button}
         title="Register"
