@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { Directions } from "react-native-gesture-handler";
 
 export const GlobalStyle = StyleSheet.create({
   container: {
@@ -121,11 +122,12 @@ export const GlobalStyle = StyleSheet.create({
   },
 
   HeadText: {
-    marginBottom: 50,
+    marginTop:40,
     color: "black",
     fontSize: 40,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: 'left', alignSelf: 'stretch'
+    ,paddingLeft:40
   },
   input:{
     alignSelf:"center",
@@ -159,5 +161,42 @@ export const GlobalStyle = StyleSheet.create({
     alignItems: "center",
     height:"100%",
     width:"100%",
-  }
+  },HeadTextRegister:{
+    fontStyle: "italic",
+    fontSize: 20,
+    textAlign: "center",
+    fontFamily: 'sans-serif'
+  },
+  IconInputContainer:{
+    flexDirection:'row',
+    borderColor:"black",
+    borderWidth:1, alignSelf:"center",
+    borderColor:'#777',
+    margin:10,
+    width:300,
+    textAlign:"left",
+    borderRadius: 4,
+    borderWidth: 1
+    
+  },  inputIcon:{
+    alignSelf:"center",
+    borderColor:'#777',
+  padding:15,
+
+    width:300,
+    textAlign:"left",
+    borderRadius: 4,
+
+  },
+  icon:{
+    paddingTop:20
+    ,paddingLeft:10,
+     fontSize:20
+    },textWithLink:{
+      flexDirection:'row',
+      alignSelf:"center",
+      margin:10,
+      textAlign:"left",
+    }
+
 });
