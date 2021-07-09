@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { Directions } from "react-native-gesture-handler";
 
 export const GlobalStyle = StyleSheet.create({
   container: {
@@ -19,7 +18,7 @@ export const GlobalStyle = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 10, 
+    paddingVertical: 50, 
   },
 
   fakeIconBox: {
@@ -34,12 +33,11 @@ export const GlobalStyle = StyleSheet.create({
 
   //Header Recipes Page(HERecipes)
   headerRecipesPage: {
-    backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 10, 
+    paddingVertical: 50, 
   },
   //----- End of titles -----
 
@@ -73,8 +71,9 @@ export const GlobalStyle = StyleSheet.create({
   },
 
   textArea: {
-    height: 150,
-    justifyContent: "flex-start"
+    height: '80%',
+    justifyContent: "flex-start",
+    textAlignVertical: 'bottom',
   },
   //----- End of TextArea -----
 
@@ -96,13 +95,18 @@ export const GlobalStyle = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
-  btnConfirm: {
+  
+  BtnNext: {
     width: 350,
     borderRadius: 10,
     alignItems: "center",
-    backgroundColor: "#65eeb5",
-    marginBottom: 100,
+    backgroundColor: "#3b579d",
+    borderWidth: 1,
+    borderColor: '#000',
+    shadowColor: '#3b579d',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 1,
+    marginBottom: 250,
     padding: 20,
   },
   //----- End of Button -----
