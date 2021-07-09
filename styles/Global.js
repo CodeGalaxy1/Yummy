@@ -2,6 +2,11 @@ import { StyleSheet } from "react-native";
 import { Directions } from "react-native-gesture-handler";
 
 export const GlobalStyle = StyleSheet.create({
+  header: {
+    
+
+    
+  }, 
   container: {
     flex: 1,
     width: '100%',

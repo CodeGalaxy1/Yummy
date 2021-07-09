@@ -10,11 +10,16 @@ export const Profile = ({navigation}) => {
 
     return (
         <View style={GlobalStyle.container}>
-            <Text>My Profile</Text>
+            <View style={{marginBottom:550}}>
+                <View style={GlobalStyle.textWithLink}>
+            <Text >My Profile</Text>
             <Button 
             onPress={onPressHandle}
             title="Logout"
             color="#5467d4"/>
+            </View>
+            </View>
+            
         </View>
     );
 }
