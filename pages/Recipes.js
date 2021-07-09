@@ -1,11 +1,12 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native';
+import { HERecipes } from '../components/Header/HERecipes';
 import { GlobalStyle } from '../styles/Global';
 
 export const Recipes = () => {
     return (
-        <View style={GlobalStyle.container}>
-            <Text>Recipes :)</Text>
-        </View>
+    <SafeAreaView style={GlobalStyle.container}>
+        <HERecipes />
+    </SafeAreaView>
     );
 }
