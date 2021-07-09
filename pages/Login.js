@@ -31,7 +31,7 @@ export const Login = ({ navigation }) => {
     navigation.navigate("Register");
   };
   const onPressHandle2 = () => {
-    if(chckMail(email)&&chkPss(password))
+    // if(chckMail(email)&&chkPss(password))
     navigation.navigate("Home");
     
   };
@@ -78,7 +78,6 @@ const chkPss=(val)=>{
               color: "black",
               fontSize: 20,
               fontWeight: "bold",
-              fontFamily: "sans-serif-condensed",
             }}
           >
             Yummy
@@ -88,7 +87,6 @@ const chkPss=(val)=>{
               color: "cornflowerblue",
               fontSize: 20,
               marginRight: 200,
-              fontFamily: "sans-serif-condensed",
               fontWeight: "bold",
             }}
           >

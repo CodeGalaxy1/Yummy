@@ -107,7 +107,7 @@ export const GlobalStyle = StyleSheet.create({
   },
   //----- End of Button -----
 
-   //----- togetherAction(HEHome) -----
+  //----- togetherAction(HEHome) -----
   togetherAction: {
     flexDirection: "row",
     justifyContent: "space-between"
@@ -120,6 +120,7 @@ export const GlobalStyle = StyleSheet.create({
     borderRadius: 10,
     marginRight: 10,
   },
+  //----- End of togetherAction -----
 
   HeadText: {
     marginTop:40,
@@ -161,16 +162,17 @@ export const GlobalStyle = StyleSheet.create({
     alignItems: "center",
     height:"100%",
     width:"100%",
-  },HeadTextRegister:{
+  },
+  HeadTextRegister:{
     fontStyle: "italic",
     fontSize: 20,
     textAlign: "center",
-    fontFamily: 'sans-serif'
   },
   IconInputContainer:{
     flexDirection:'row',
     borderColor:"black",
-    borderWidth:1, alignSelf:"center",
+    borderWidth:1, 
+    alignSelf:"center",
     borderColor:'#777',
     margin:10,
     width:300,
