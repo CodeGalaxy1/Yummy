@@ -11,10 +11,122 @@ export const GlobalStyle = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    backgroundColor: '#ffc371',
+  },
+
+  SafeAreaView: {
+    flex: 1,
+  },
+
+  //----- Titles -----
+  //Header Home Page(HEHome)
+  headerHomePage: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10, 
+  },
+
+  fakeIconBox: {
+    backgroundColor: '#e4e6eb',
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+    flexDirection: 'row',
     justifyContent: 'center',
-  },  
+    alignItems: 'center',
+  },
+
+  //Header Recipes Page(HERecipes)
+  headerRecipesPage: {
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10, 
+  },
+  //----- End of titles -----
+
+  
+  //----- Modal -----
+  //Modal Toggle(HEHome)
+  modalToggle: {
+    marginBottom: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    backgroundColor: '#e4e6eb',
+    padding: 10,
+    alignSelf: "flex-end",
+  },
+
+  modalContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  //----- End of Modal -----
+
+  //----- TextArea(HEHome) -----
+  textAreaContainer: {
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5,
+    borderRadius: 4,
+    padding:15,
+    margin:10,
+  },
+
+  textArea: {
+    height: 150,
+    justifyContent: "flex-start"
+  },
+  //----- End of TextArea -----
+
+  //----- TextInput(HEHome) -----
+  inputRecipe: {
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5,
+    borderRadius: 4,
+    padding:15,
+    margin:10,
+  },
+  //----- End of TextInput -----
+
+  //----- Button Confirm(HEHome) -----
+  btnEffect: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  btnConfirm: {
+    width: 350,
+    borderRadius: 10,
+    alignItems: "center",
+    backgroundColor: "#65eeb5",
+    marginBottom: 100,
+    padding: 20,
+  },
+  //----- End of Button -----
+
+  //----- togetherAction(HEHome) -----
+  togetherAction: {
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+
+  imgRecipe: {
+    width: 100,
+    height: 100,
+    backgroundColor: "#f2709c",
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  //----- End of togetherAction -----
+
   HeadText: {
     marginTop:40,
     color: "black",
@@ -55,16 +167,17 @@ export const GlobalStyle = StyleSheet.create({
     alignItems: "center",
     height:"100%",
     width:"100%",
-  },HeadTextRegister:{
+  },
+  HeadTextRegister:{
     fontStyle: "italic",
     fontSize: 20,
     textAlign: "center",
-    fontFamily: 'sans-serif'
   },
   IconInputContainer:{
     flexDirection:'row',
     borderColor:"black",
-    borderWidth:1, alignSelf:"center",
+    borderWidth:1, 
+    alignSelf:"center",
     borderColor:'#777',
     margin:10,
     width:300,
