@@ -31,43 +31,37 @@ export const Login = ({ navigation }) => {
     navigation.navigate("Register");
   };
   const onPressHandle2 = () => {
-    // if(chckMail(email)&&chkPss(password))
-    navigation.navigate("Home");
-    
+    if (chckMail(email) && chkPss(password)) navigation.navigate("Home");
   };
-const chckMail=(val)=>{
-  if(isEmailValid(val))
-  {
-  setMsg("")
-  return true
-  }
-  else
-  {
-    setMsg("invalid mail")
-  return false
-  }
-}
-const chkPss=(val)=>{
-  if(isPsswordValid(val))
-  {
-  setMsg("")
-  return true
-  }
-  else
-  {
-    setMsg("invalid Password")
-  return false
-  }
-}
+
+  const chckMail = (val) => {
+    if (isEmailValid(val)) {
+      setMsg("");
+      return true;
+    } else {
+      setMsg("invalid mail");
+      return false;
+    }
+  };
+  const chkPss = (val) => {
+    if (isPsswordValid(val)) {
+      setMsg("");
+      return true;
+    } else {
+      setMsg("invalid Password");
+      return false;
+    }
+  };
 
   const isEmailValid = () => {
-       let pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-       return pattern.test(String(email).toLowerCase())
-  }
+    let pattern =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return pattern.test(String(email).toLowerCase());
+  };
   const isPsswordValid = () => {
-    let pattern = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,14}/
-    return pattern.test(String(password))
-}
+    let pattern = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,14}/;
+    return pattern.test(String(password));
+  };
 
   return (
     <View style={GlobalStyle.container}>
@@ -78,6 +72,7 @@ const chkPss=(val)=>{
               color: "black",
               fontSize: 20,
               fontWeight: "bold",
+              fontFamily: "sans-serif-condensed",
             }}
           >
             Yummy
@@ -87,6 +82,7 @@ const chkPss=(val)=>{
               color: "cornflowerblue",
               fontSize: 20,
               marginRight: 200,
+              fontFamily: "sans-serif-condensed",
               fontWeight: "bold",
             }}
           >
@@ -114,7 +110,6 @@ const chkPss=(val)=>{
             style={GlobalStyle.inputIcon}
             onChangeText={(text) => setEmail(text)}
           />
-     
         </View>
         <View style={GlobalStyle.IconInputContainer}>
           <SimpleLineIcons style={GlobalStyle.icon} name="eye" />
@@ -131,6 +126,7 @@ const chkPss=(val)=>{
           color="#dc143c"
           onPress={onPressHandle2}
         />
+
         <Text>{"\n"}</Text>
         <Text>{"\n"}</Text>
         <View style={GlobalStyle.textWithLink}>

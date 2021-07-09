@@ -1,6 +1,11 @@
 import { StyleSheet } from "react-native";
 
 export const GlobalStyle = StyleSheet.create({
+  header: {
+    
+
+    
+  }, 
   container: {
     flex: 1,
     width: '100%',
