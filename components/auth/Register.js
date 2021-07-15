@@ -14,8 +14,8 @@ export default class Register extends Component {
     }
 
     onSignUp = async () => {
-        const UserProps = 
-        {   
+        const UserProps =
+        {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password
@@ -33,13 +33,24 @@ export default class Register extends Component {
             return res.json()
         }).then(result => {
             if (result) {
-                console.log(AsyncStorage.setItem('Token', UserProps))
+                this.storeData(UserProps);
                 console.log('A new user has been created!!!')
             }
         }, (error) => {
             console.log('No user created.')
         })
     }
+
+    storeData = async (values) => {
+        try {
+            const jsonValue = JSON.stringify(values)
+            await AsyncStorage.setItem('Token', jsonValue)
+        } catch (e) {
+            // saving error
+            console.log("Data error.")
+        }
+    }
+        
 
     render() {
         return (
