@@ -9,16 +9,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
+import LoginScreen from './components/auth/Login';
 import MainScreen from './components/Main';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import rootReducer from './redux/reducers';
-import thuck from 'redux-thunk';
-
-const store = createStore(rootReducer, applyMiddleware(thuck))
 
 const Stack = createStackNavigator();
 
@@ -29,62 +23,64 @@ class App extends Component {
     this.state = {
       listUsers: [],
       loaded: false,
-      loggedIn: true,
+      loggedIn: false,
     }
   }
 
-   componentDidMount() {
-     this.loadInitialState();
-  }
+    componentDidMount() {
+      this.loadInitialState();
+   }
 
-  loadInitialState = async () => {
-    try {
-      const user = await AsyncStorage.getItem('Token');
-      if (user !== null) {
-        this.setState({ 
-          listUsers: user,
-          loggedIn: true,
-          loaded: true,
+   loadInitialState = async () => {
+     try {
+       const user = await AsyncStorage.getItem('token');
+       console.log(user)
+       if (user !== undefined) {
+         this.setState({ 
+           listUsers: user,
+           loggedIn: false,
+           loaded: true,
+          })
+       }
+       else {
+         this.setState({
+           loggedIn: false,
+           loaded: true,
          })
-      }
-      else {
-        this.setState({
-          loggedIn: false,
-          loaded: true,
-        })
-      }
+       }
     } catch(e) {
-
-    }
-  }
+       //saving error
+     }
+   }
 
   render () {
-    if (!this.state.loaded) {
-      return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>Loading</Text>
-        </View>
-      );
-    }
+     if (!this.state.loaded) {
+       return (
+         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+           <Text>Loading</Text>
+         </View>
+       );
+     }
 
-    if (!this.state.loggedIn) {
+     if (!this.state.loggedIn) {
       return (
         <>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Landing">
               <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
               <Stack.Screen name="Register" component={RegisterScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </>
       );
-    }
+     }
 
-    return (
-      <Provider store={store}>
-        <MainScreen/>
-      </Provider>
-    );
+     return (
+       
+      <MainScreen/>
+      
+     );
   }
 }
 
