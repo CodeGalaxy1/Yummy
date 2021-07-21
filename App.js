@@ -11,8 +11,17 @@ import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
 import LoginScreen from './components/auth/Login';
 import MainScreen from './components/Main';
+import AddScreen from './components/main/Add';
+import SaveScreen from './components/main/Save';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './redux/reducers';
+import thunk from 'redux-thunk';
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const Stack = createStackNavigator();
 
@@ -21,7 +30,6 @@ class App extends Component {
     super(props);
 
     this.state = {
-      listUsers: [],
       loaded: false,
       loggedIn: false,
     }
@@ -33,14 +41,15 @@ class App extends Component {
 
    loadInitialState = async () => {
      try {
-       const user = await AsyncStorage.getItem('token');
-       console.log(user)
+       let response = await AsyncStorage.getItem('currentUser');
+       let user = await JSON.parse(response)
+
        if (user !== undefined) {
-         this.setState({ 
-           listUsers: user,
-           loggedIn: false,
+         this.setState({
+           currentUser: user,
+           loggedIn: true,
            loaded: true,
-          })
+         })
        }
        else {
          this.setState({
@@ -48,7 +57,7 @@ class App extends Component {
            loaded: true,
          })
        }
-    } catch(e) {
+     } catch (e) {
        //saving error
      }
    }
@@ -77,9 +86,15 @@ class App extends Component {
      }
 
      return (
-       
-      <MainScreen/>
-      
+       <Provider store={store}>
+         <NavigationContainer>
+           <Stack.Navigator initialRouteName="Main">
+             <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
+             <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation}/>
+             <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
+           </Stack.Navigator>
+         </NavigationContainer>
+       </Provider>
      );
   }
 }

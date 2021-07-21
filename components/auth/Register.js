@@ -25,7 +25,7 @@ export default class Register extends Component {
             password: this.state.password,
         }
 
-        try{
+        try {
             if (UserProps.name !== "" && UserProps.email !== "" && UserProps.password !== "") {
                 await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/users', {
                     method: 'POST',
@@ -39,14 +39,14 @@ export default class Register extends Component {
                     return res.json()
                 }).then(result => {
                     if (result) {
-                        this.storeData(UserProps);
+                        this.storeUserData(UserProps);
                         console.log('A new user has been created!!!')
                         //this.props.navigation.navigate("Login")
                     }
                 }, (error) => {
                     console.log('No user created.')
                 })
-            }else {
+            } else {
                 Alert.alert(error)
             }
 
@@ -55,17 +55,15 @@ export default class Register extends Component {
         }
     }
 
-    storeData = async (user) => {
+    storeUserData = async (user) => {
         try {
-            const listOfUsers = user;
-            console.log(user)
-            await AsyncStorage.setItem('listOfUsers', JSON.stringify(listOfUsers));
+            const currentUser = user;
+            await AsyncStorage.setItem('currentUser', JSON.stringify(currentUser));
         } catch (e) {
             // saving error
             console.log("Data error.")
         }
     }
-        
 
     render() {
 
@@ -76,16 +74,16 @@ export default class Register extends Component {
 
         return (
             <View>
-                <TextInput 
+                <TextInput
                     placeholder="name"
                     onChangeText={(name) => this.setState({ name })}
                 />
-                <TextInput 
+                <TextInput
                     placeholder="email"
                     keyboardType="email-address"
                     onChangeText={(email) => this.setState({ email })}
                 />
-                <TextInput 
+                <TextInput
                     placeholder="password"
                     secureTextEntry={true}
                     onChangeText={(password) => this.setState({ password })}
@@ -93,7 +91,7 @@ export default class Register extends Component {
 
                 <Button
                     onPress={() => this.onSignUp()}
-                    title= "Sign Up"
+                    title="Sign Up"
                 />
             </View>
         );
