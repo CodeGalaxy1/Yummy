@@ -24,8 +24,8 @@ class Main extends Component {
     }
 
     componentDidMount() {
-       this.props.fetchUser()
-       this.props.fetchRecipe()
+        this.props.fetchUser()
+        this.props.fetchRecipe()
     }
 
     render() {

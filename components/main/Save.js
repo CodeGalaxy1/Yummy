@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Image, Alert, Button, Text } from 'react-native';
+import { View, TextInput, Image, Alert, Button } from 'react-native';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchUser } from '../../redux/actions/index';
 
+import { ActivityIndicator, Colors } from 'react-native-paper';
+
 function Save(props, { navigation }) {
+
+    const [isLoading, setLoading] = useState(false);
 
     const [token, setToken] = useState('');
     const [picture, setPicture] = useState('');
@@ -14,10 +18,18 @@ function Save(props, { navigation }) {
     const [descR, setDescR] = useState('');
 
     useEffect(() => {
+
+    }, [])
+
+    useEffect(() => {
         props.fetchUser()
         setPicture(props.route.params.image)
         getToken()
-    }, [token], [picture]);
+
+        return () => {
+            console.log("Clean Up")
+        }
+    }, [token, picture]);
 
     const getToken = async () => {
         try {
@@ -32,32 +44,52 @@ function Save(props, { navigation }) {
         const uri = props.route.params.image;  
 
         const RecipeProps = {
-            token,
-            picture,
-            nameR,
-            timeR,
-            descR,
+            "token": token,
+            "picture": picture,
+            "nameR": nameR,
+            "timeR": timeR,
+            "descR": descR,
         }
+
+        setLoading(true)
         
         if (uri !== null) {
-            await fetch("http://ruppinmobile.tempdomain.co.il/site08/api/recipes", {
+
+            let response = await fetch("http://ruppinmobile.tempdomain.co.il/site08/api/recipes", {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-type': 'application/json'
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: JSON.stringify(RecipeProps)
-            }).then((res) => {
-                if (res.status === 201) { return res.json(); }
-                else { return "err"; }
-            }).then((responseData) => {
-                if (responseData.status !== "err") {
-                    Alert.alert('Work');
+            })
+            let data = await response.json()
+            if(data) {
+                setTimeout(() => {
                     props.navigation.popToTop();
-                } else {
-                    Alert.alert('Error uploding...');
-                }
-            }).catch(err => { Alert.alert('Error upload= ' + err); });
+                    setLoading(false)
+                }, 1000);
+            }
+
+            // await fetch("http://ruppinmobile.tempdomain.co.il/site08/api/recipes", {
+            //     method: 'POST',
+            //     headers: {
+            //         'Accept': 'application/json',
+            //         'Content-type': 'application/json'
+            //     },
+            //     body: JSON.stringify(RecipeProps)
+            // }).then((res) => {
+            //     if (res.status === 201) { return res.json(); }
+            //     else { return "err"; }
+            // }).then((responseData) => {
+            //     if (responseData.status !== "err") {
+            //         setTimeout(() => {
+            //             props.navigation.popToTop();
+            //         }, 4000);
+            //     } else {
+            //         Alert.alert('Error uploding...');
+            //     }
+            // }).catch(err => { Alert.alert('Error upload= ' + err); });
         } else {
             Alert.alert('You must go back and select an image!')
         }
@@ -70,7 +102,7 @@ function Save(props, { navigation }) {
 
     return (
         <View style={{ flex: 1 }}>
-            {props.route.params.image && <Image style={{ flex: 0.3, aspectRatio: 1, alignSelf: 'center', marginTop: 10 }} source={{ uri: `data:image/image;base64, ${props.route.params.image}` }} /> }
+            {props.route.params.image && <Image style={{ flex: 0.3, aspectRatio: 1, alignSelf: 'center', marginTop: 10, }} source={{ uri: `data:image/image;base64, ${props.route.params.image}` }} /> }
             <TextInput
                 style={{margin: 10}}
                 placeholder="Name of Recipe"
@@ -87,7 +119,9 @@ function Save(props, { navigation }) {
                 placeholder="Write how to prepare..."
                 onChangeText={(caption) => setDescR(caption)}
             />
-            <Button title="Save" onPress={() => uploadImage()} />           
+            <View style={{flex:1}}>
+            {!isLoading ? <Button title="Save" onPress={() => uploadImage()} /> : <ActivityIndicator animating={true} color={Colors.blue500} />}
+            </View>
         </View>
     );
 }

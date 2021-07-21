@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, FlatList } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 function Profile(props) {
 
     const { currentUser, recipes } = props;
-    console.log({ currentUser, recipes })
 
     return (
         <View style={styles.container}>
@@ -14,7 +13,6 @@ function Profile(props) {
             <Text>{currentUser.name}</Text>
             <Text>{currentUser.email}</Text>
             </View>
-
             <View style={styles.containerGallery}>
                 <FlatList
                     numColumns={3}
@@ -24,9 +22,9 @@ function Profile(props) {
                     renderItem={({item}) => (
                         <View style={styles.containerImage}>
                         <Image
-                            id={recipes.id}
+                            id={item.id}
                             style={styles.image}
-                            source={{uri: `data:image/image;base64,${recipes.picture}`}}
+                            source={{uri: `data:image/image;base64,${item.picture}`}}
                         />
                         </View>
                     )}
@@ -53,13 +51,13 @@ const styles = StyleSheet.create({
     image: {
         flex: 1,
         aspectRatio: 1/1,
-        borderWidth: 1,
+        margin: 0.5,
     }
 })
 
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
-    recipes: store.userState.recipes,
+    recipes: store.userState.recipes
 })
 
 export default connect(mapStateToProps, null)(Profile);

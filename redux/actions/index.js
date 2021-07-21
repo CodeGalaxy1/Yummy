@@ -47,7 +47,6 @@ export function fetchRecipe() {
             return res.json()
         }).then( async (result) => {    
             if (result) {
-                result.To
                 dispatch
                 ({
                     type: USER_POSTS_STATE_CHANGE,
