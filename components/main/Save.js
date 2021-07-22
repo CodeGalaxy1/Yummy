@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useFocusEffect } from 'react';
 import { View, TextInput, Image, Alert, Button } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -18,27 +18,14 @@ function Save(props, { navigation }) {
     const [descR, setDescR] = useState('');
 
     useEffect(() => {
-
-    }, [])
-
-    useEffect(() => {
-        props.fetchUser()
-        setPicture(props.route.params.image)
-        getToken()
-
-        return () => {
-            console.log("Clean Up")
-        }
-    }, [token, picture]);
-
-    const getToken = async () => {
         try {
+            props.fetchUser()
+            setPicture(props.route.params.image)
             setToken(props.currentUser.token)
-            console.log(props.currentUser.token)
         } catch (error) {
             throw new Error(error)
         }
-    }
+    }, [token, picture]);
 
     const uploadImage = async () => {
         const uri = props.route.params.image;  
@@ -52,7 +39,7 @@ function Save(props, { navigation }) {
         }
 
         setLoading(true)
-        
+
         if (uri !== null) {
 
             let response = await fetch("http://ruppinmobile.tempdomain.co.il/site08/api/recipes", {
@@ -65,36 +52,14 @@ function Save(props, { navigation }) {
             })
             let data = await response.json()
             if(data) {
-                setTimeout(() => {
-                    props.navigation.popToTop();
-                    setLoading(false)
-                }, 1000);
+                props.navigation.popToTop()
+                setLoading(false)
             }
-
-            // await fetch("http://ruppinmobile.tempdomain.co.il/site08/api/recipes", {
-            //     method: 'POST',
-            //     headers: {
-            //         'Accept': 'application/json',
-            //         'Content-type': 'application/json'
-            //     },
-            //     body: JSON.stringify(RecipeProps)
-            // }).then((res) => {
-            //     if (res.status === 201) { return res.json(); }
-            //     else { return "err"; }
-            // }).then((responseData) => {
-            //     if (responseData.status !== "err") {
-            //         setTimeout(() => {
-            //             props.navigation.popToTop();
-            //         }, 4000);
-            //     } else {
-            //         Alert.alert('Error uploding...');
-            //     }
-            // }).catch(err => { Alert.alert('Error upload= ' + err); });
         } else {
             Alert.alert('You must go back and select an image!')
         }
     }
-    
+
     //Checking the fields in the Terminal!
     console.log(nameR)
     console.log(timeR)

@@ -21,11 +21,14 @@ class Main extends Component {
         super(props);
 
         this.state = {}
+
+        console.log('constructor')
     }
 
     componentDidMount() {
         this.props.fetchUser()
         this.props.fetchRecipe()
+        console.log('componentDidMount')
     }
 
     render() {
