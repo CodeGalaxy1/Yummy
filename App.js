@@ -13,6 +13,7 @@ import LoginScreen from './components/auth/Login';
 import MainScreen from './components/Main';
 import AddScreen from './components/main/Add';
 import SaveScreen from './components/main/Save';
+import RecipeScreen from './components/main/Recipe';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -35,34 +36,29 @@ class App extends Component {
     }
   }
 
-    componentDidMount() {
-      this.loadInitialState();
-   }
-
    loadInitialState = async () => {
-     try {
-       let response = await AsyncStorage.getItem('currentUser');
-       let user = await JSON.parse(response)
+     let response = await AsyncStorage.getItem('currentUser');
+     let user = await JSON.parse(response)
 
-       if (user !== undefined) {
-         this.setState({
-           currentUser: user,
-           loggedIn: true,
-           loaded: true,
-         })
-       }
-       else {
-         this.setState({
-           loggedIn: false,
-           loaded: true,
-         })
-       }
-     } catch (e) {
-       //saving error
+     if (!user) {
+       this.setState({
+         currentUser: user,
+         loggedIn: false,
+         loaded: true,
+       })
+     }
+     else {
+       this.setState({
+         loggedIn: true,
+         loaded: true,
+       })
      }
    }
 
   render () {
+
+    this.loadInitialState();
+
      if (!this.state.loaded) {
        return (
          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -89,9 +85,10 @@ class App extends Component {
        <Provider store={store}>
          <NavigationContainer>
            <Stack.Navigator initialRouteName="Main">
-             <Stack.Screen name="Main" component={MainScreen} />
+             <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
              <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation} options={{ animationEnabled: false }} />
              <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation} options={{ animationEnabled: false }}/>
+             <Stack.Screen name="Recipe" component={RecipeScreen} navigation={this.props.navigation} options={{ animationEnabled: false, headerBackTitle: 'Back'}}/>
            </Stack.Navigator>
          </NavigationContainer>
        </Provider>

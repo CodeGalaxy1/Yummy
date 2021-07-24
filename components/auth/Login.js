@@ -9,6 +9,7 @@ export default class Login extends Component {
         this.state = {
             email: '',
             password: '',
+            currentUser: null,
         }
     }
 
@@ -25,9 +26,11 @@ export default class Login extends Component {
                     console.log('res.status', res.status);
                     return res.json()
                 }).then(result => {
-                    let currentUser = result.find((user) => user.email === this.state.email && user.password === this.state.password)
-                    if (result && currentUser) {
-                        this.storeUserData(currentUser);
+                    this.setState({
+                        currentUser: result.find((user) => user.email === this.state.email && user.password === this.state.password)
+                    })
+                    if (result && this.state.currentUser) {
+                        this.storeUserData(this.state.currentUser);
                     }
                 }, (error) => {
                     console.log(error)
@@ -41,10 +44,9 @@ export default class Login extends Component {
         }
     }
 
-    storeUserData = async (user) => {
+    storeUserData = async (currentUser) => {
         try {
             await AsyncStorage.removeItem('currentUser');
-            const currentUser = user;
             await AsyncStorage.setItem('currentUser', JSON.stringify(currentUser));
         } catch (e) {
             // saving error

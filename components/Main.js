@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchUser, fetchRecipe } from '../redux/actions/index';
+import { fetchUser, clearData } from '../redux/actions/index';
 
 import HomeScreen from './main/Home';
 import ProfileScreen from './main/Profile';
@@ -21,14 +21,11 @@ class Main extends Component {
         super(props);
 
         this.state = {}
-
-        console.log('constructor')
     }
 
     componentDidMount() {
+        this.props.clearData()
         this.props.fetchUser()
-        this.props.fetchRecipe()
-        console.log('componentDidMount')
     }
 
     render() {
@@ -67,6 +64,6 @@ const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser
 })
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser, fetchRecipe}, dispatch );
+const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser, clearData}, dispatch );
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useFocusEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Image, Alert, Button } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -52,6 +52,7 @@ function Save(props, { navigation }) {
             })
             let data = await response.json()
             if(data) {
+                console.log(data)
                 props.navigation.popToTop()
                 setLoading(false)
             }

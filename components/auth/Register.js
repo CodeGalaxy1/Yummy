@@ -17,6 +17,7 @@ export default class Register extends Component {
     }
 
     onSignUp = async () => {
+
         const UserProps =
         {
             token: uuid.v4(),
@@ -41,7 +42,6 @@ export default class Register extends Component {
                     if (result) {
                         this.storeUserData(UserProps);
                         console.log('A new user has been created!!!')
-                        //this.props.navigation.navigate("Login")
                     }
                 }, (error) => {
                     console.log('No user created.')

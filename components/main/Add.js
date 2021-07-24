@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Image } from 'react-native';
+
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -24,7 +27,7 @@ export default function Add({ navigation }) {
   const takePicture = async () => {
       if (camera) {
           const data = await camera.takePictureAsync({
-            quality: 1,
+            quality: 0.1,
             base64: true
           });
           setImage(data.base64);
@@ -36,7 +39,7 @@ export default function Add({ navigation }) {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0.1,
       base64: true
     });
 
@@ -54,7 +57,7 @@ export default function Add({ navigation }) {
   }
   
   return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: '#000' }}>
           <View style={styles.cameraContainer}>
               <Camera 
               ref={ref => setCamera(ref)}
@@ -62,16 +65,7 @@ export default function Add({ navigation }) {
               type={type} 
               ratio={'1:1'} />
           </View>
-
-        <View style=
-        {{ 
-            flex: 1, 
-            flexDirection: 'row', 
-            justifyContent: 'space-between', 
-            alignItems: 'flex-end', 
-            alignSelf: 'center', 
-            marginBottom: 30,
-        }}>
+          <View style={{ marginTop: 460, flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
           <Button
               title="Flip Image"
               onPress={() => {
@@ -82,15 +76,17 @@ export default function Add({ navigation }) {
                   );
               }}>
           </Button>
-          <Button title="Take Picture" onPress={() => takePicture()} />
+          <MaterialCommunityIcons name="circle-slice-8" color={'#fff'} size={70} onPress={() => takePicture()} />
           <Button title="Gallery" onPress={() => pickImage()} />
           </View>
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-        {image && <Image source={{ uri: `data:image/image;base64,${image}` }} style={{ flex: 0.5, aspectRatio: 1}} />}
-        </View>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Button title="Next" onPress={() => navigation.navigate("Save", {image})} />
-          </View>
+          {image === null ? 
+          <View style={{ margin: 1, marginBottom: 40, flex: 1,  flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+            <Button title="Next" onPress={() => navigation.navigate("Save", {image})} />
+          </View> : 
+          <View style={{ margin: 1, marginBottom: 40, flex: 1,  flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <Image source={{ uri: `data:image/image;base64,${image}` }} style={{ flex: 0.2, aspectRatio: 1}} />
+            <Button title="Next" onPress={() => navigation.navigate("Save", {image})} />
+        </View>}
       </View>
   );
 }
