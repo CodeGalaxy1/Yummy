@@ -1,21 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, FlatList, Text, Image, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, FlatList, Text, Image, Button } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home(props, { navigation }) {
 
     const [recipes, setRecipes] = useState([]);
-
+    const [currentUser, setCurrentUser] = useState([]);
+    
     useEffect(() => {
         fetchRecipes();
     })
 
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            fetchRecipes();
+        });
+    
+        return unsubscribe;
+    }, [navigation]);
+
     const getCurrentUser = async () => {
         let response = await AsyncStorage.getItem('currentUser')
         let user = await JSON.parse(response)
+        setCurrentUser(user)
         return user;
     }
 
@@ -39,7 +48,7 @@ export default function Home(props, { navigation }) {
     }
 
     const onLikePress = async (item) => {
-        let user = await getCurrentUser();
+        await getCurrentUser();
         Promise.all([
             await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/favorites', {
                 method: 'POST',
@@ -48,7 +57,7 @@ export default function Home(props, { navigation }) {
                     'Content-type': 'application/json'
                 }),
                 body: JSON.stringify({
-                    "userID": user.id,
+                    "userID": currentUser.id,
                     "recipeID": item.recipeID,
                     "likes": true,
                     "recipeIMG": item.recipeIMG,

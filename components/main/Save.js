@@ -13,8 +13,7 @@ function Save(props, { navigation }) {
     const [isLoading, setLoading] = useState(false);
 
     const [userID, setUserID] = useState(0);
-
-    const [recipeTOKEN, setRecipeTOKEN] = useState('');
+    
     const [recipeIMG, setRecipeIMG] = useState('');
     const [recipeNAME, setRecipeNAME] = useState('');
     const [recipeTIME, setRecipeTIME] = useState('');
@@ -23,14 +22,24 @@ function Save(props, { navigation }) {
     const getCurrentUser = async () => {
         let response = await AsyncStorage.getItem('currentUser')
         let user = await JSON.parse(response)
-        return user;
+
+        let getUser = await fetch("http://ruppinmobile.tempdomain.co.il/site08/api/users", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json; charset=UTF-8',
+                'Content-type': 'application/json'
+            },
+        })
+        let data = await getUser.json()
+        if(data) {
+            currentUser = data.find(u => u.token === user.token)
+        }
+        return currentUser;
     }
 
     const uploadRecipe = async () => { 
 
         user = await getCurrentUser();
-        setUserID(user.id)
-        setRecipeTOKEN(user.token)
         setRecipeIMG(props.route.params.image)
         setLoading(true)
 
@@ -43,7 +52,7 @@ function Save(props, { navigation }) {
                         'Content-type': 'application/json'
                     },
                     body: JSON.stringify({
-                        "recipeTOKEN": recipeTOKEN,
+                        "recipeTOKEN": user.token,
                         "recipeIMG": recipeIMG,
                         "recipeNAME": recipeNAME,
                         "recipeTIME": recipeTIME,
@@ -57,8 +66,8 @@ function Save(props, { navigation }) {
                         'Content-type': 'application/json'
                     },
                     body: JSON.stringify({
-                        "userID": userID,
-                        "tokenUR": recipeTOKEN,
+                        "userID": user.id,
+                        "tokenUR": user.token,
                         "recipeIMG": recipeIMG,
                         "recipeNAME": recipeNAME,
                         "recipeTIME": recipeTIME,
