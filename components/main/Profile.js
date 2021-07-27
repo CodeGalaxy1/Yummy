@@ -5,11 +5,10 @@ import { Appbar } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-let user = [];
+import { connect } from 'react-redux';
 
 function Profile(props, {navigation}) {
 
-    const [currentUser, setCurrentUser] = useState([]);
     const [userRecipes, setUserRecipes] = useState([]);
     const [userFavorites, setUserFavorites] = useState([]);
     const [refresh, setRefresh] = useState(false);
@@ -17,10 +16,11 @@ function Profile(props, {navigation}) {
     const [button, setButton] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
 
+    const { currentUser } = props;
+    
     const getCurrentUser = async () => {
         let response = await AsyncStorage.getItem('currentUser')
         let user = await JSON.parse(response)
-        setCurrentUser(user)
         return user;
     }
 
@@ -52,15 +52,15 @@ function Profile(props, {navigation}) {
             .then(async ([data1, data2]) => {
 
                 setRefresh(true)
-                user = await getCurrentUser();
+                let user = await getCurrentUser();
                 let recipes = data1.filter(function(item){
-                    return item.userID === user.id;
+                    return user.id === item.userID;
                 })
                 
                 let favorites = data2.filter(function(item){
-                    return item.userID === user.id;
+                    return user.id === item.userID;
                 })
-                console.log(data2)
+
                 if(recipes && favorites){
                     setUserRecipes(recipes)
                     setUserFavorites(favorites)
@@ -297,4 +297,9 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Profile;
+
+const mapStateToProps = (store) => ({
+    currentUser: store.userState.currentUser,
+})
+
+export default connect(mapStateToProps, null)(Profile);

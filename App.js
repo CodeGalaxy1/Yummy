@@ -18,6 +18,13 @@ import UpdateScreen from './components/main/Update';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './redux/reducers';
+import thunk from 'redux-thunk';
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
+
 const Stack = createStackNavigator();
 
 class App extends Component {
@@ -76,6 +83,7 @@ class App extends Component {
      }
 
      return (
+      <Provider store={store}>
          <NavigationContainer>
            <Stack.Navigator initialRouteName="Main">
              <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
@@ -85,6 +93,7 @@ class App extends Component {
              <Stack.Screen name="Update" component={UpdateScreen} navigation={this.props.navigation} options={{ animationEnabled: false, headerBackTitle: 'Back'}}/>
            </Stack.Navigator>
          </NavigationContainer>
+      </Provider>
      );
   }
 }

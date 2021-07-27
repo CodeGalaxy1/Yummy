@@ -13,14 +13,6 @@ export default function Home(props, { navigation }) {
         fetchRecipes();
     })
 
-    useEffect(() => {
-        const unsubscribe = props.navigation.addListener('focus', () => {
-            fetchRecipes();
-        });
-    
-        return unsubscribe;
-    }, [navigation]);
-
     const getCurrentUser = async () => {
         let response = await AsyncStorage.getItem('currentUser')
         let user = await JSON.parse(response)
@@ -134,8 +126,8 @@ export default function Home(props, { navigation }) {
                     horizontal={false}
                     data={recipes}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <View style={{ marginBottom: 50, backgroundColor: '#f7f7f7'}}>
+                    renderItem={({ item, index }) => (
+                        <View key={index} style={{ marginBottom: 50, backgroundColor: '#f7f7f7'}}>
                                  <Text style={{ paddingHorizontal: 10, paddingVertical: 10, fontSize: 18, fontWeight: '700'}}>{item.recipeNAME}</Text>
                                  <View style={styles.containerImage}>
                                      <Image

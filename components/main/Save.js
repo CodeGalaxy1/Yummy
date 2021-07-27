@@ -4,7 +4,9 @@ import { View, TextInput, Image, Alert, Button } from 'react-native';
 import { ActivityIndicator, Colors } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-let user = [];
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchUser } from '../../redux/actions/index';
 
 function Save(props, { navigation }) {
 
@@ -14,33 +16,25 @@ function Save(props, { navigation }) {
 
     const [userID, setUserID] = useState(0);
     
+    const [recipeTOKEN, setRecipeTOKEN] = useState('');
     const [recipeIMG, setRecipeIMG] = useState('');
     const [recipeNAME, setRecipeNAME] = useState('');
     const [recipeTIME, setRecipeTIME] = useState('');
     const [recipeDESC, setRecipeDESC] = useState('');
 
-    const getCurrentUser = async () => {
-        let response = await AsyncStorage.getItem('currentUser')
-        let user = await JSON.parse(response)
-
-        let getUser = await fetch("http://ruppinmobile.tempdomain.co.il/site08/api/users", {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json; charset=UTF-8',
-                'Content-type': 'application/json'
-            },
-        })
-        let data = await getUser.json()
-        if(data) {
-            currentUser = data.find(u => u.token === user.token)
+    useEffect(() => {
+        try {
+            props.fetchUser()
+            setRecipeIMG(props.route.params.image)
+            setUserID(props.currentUser.id)
+            setRecipeTOKEN(props.currentUser.token)
+        } catch (error) {
+            throw new Error(error)
         }
-        return currentUser;
-    }
+    }, [userID, recipeTOKEN, recipeIMG]);
 
     const uploadRecipe = async () => { 
 
-        user = await getCurrentUser();
-        setRecipeIMG(props.route.params.image)
         setLoading(true)
 
         if (recipeNAME !== '' && recipeTIME !== '' && recipeDESC !== '') {
@@ -52,7 +46,7 @@ function Save(props, { navigation }) {
                         'Content-type': 'application/json'
                     },
                     body: JSON.stringify({
-                        "recipeTOKEN": user.token,
+                        "recipeTOKEN": recipeTOKEN,
                         "recipeIMG": recipeIMG,
                         "recipeNAME": recipeNAME,
                         "recipeTIME": recipeTIME,
@@ -66,8 +60,8 @@ function Save(props, { navigation }) {
                         'Content-type': 'application/json'
                     },
                     body: JSON.stringify({
-                        "userID": user.id,
-                        "tokenUR": user.token,
+                        "userID": userID,
+                        "tokenUR": recipeTOKEN,
                         "recipeIMG": recipeIMG,
                         "recipeNAME": recipeNAME,
                         "recipeTIME": recipeTIME,
@@ -123,4 +117,10 @@ function Save(props, { navigation }) {
     );
 }
 
-export default Save;
+const mapStateToProps = (store) => ({
+    currentUser: store.userState.currentUser,
+})
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser}, dispatch );
+
+export default connect(mapStateToProps, mapDispatchToProps)(Save)

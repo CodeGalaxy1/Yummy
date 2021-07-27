@@ -6,6 +6,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import HomeScreen from './main/Home';
 import ProfileScreen from './main/Profile';
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchUser, clearData } from '../redux/actions/index';
+
 const Tab = createMaterialBottomTabNavigator();
 
 const EmptyScreen = () => {
@@ -17,6 +21,11 @@ class Main extends Component {
         super(props);
 
         this.state = {}
+    }
+
+    componentDidMount() {
+        this.props.clearData()
+        this.props.fetchUser()
     }
 
     render() {
@@ -51,4 +60,10 @@ class Main extends Component {
     }
 }
 
-export default Main;
+const mapStateToProps = (store) => ({
+    currentUser: store.userState.currentUser
+})
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser, clearData}, dispatch );
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
