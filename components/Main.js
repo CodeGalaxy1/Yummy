@@ -3,10 +3,6 @@ import React, { Component } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetchUser, clearData } from '../redux/actions/index';
-
 import HomeScreen from './main/Home';
 import ProfileScreen from './main/Profile';
 
@@ -21,11 +17,6 @@ class Main extends Component {
         super(props);
 
         this.state = {}
-    }
-
-    componentDidMount() {
-        this.props.clearData()
-        this.props.fetchUser()
     }
 
     render() {
@@ -60,10 +51,4 @@ class Main extends Component {
     }
 }
 
-const mapStateToProps = (store) => ({
-    currentUser: store.userState.currentUser
-})
-
-const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser, clearData}, dispatch );
-
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default Main;

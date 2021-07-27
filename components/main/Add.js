@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, Alert } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function Add({ navigation }) {
+export default function Add(props, { navigation }) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [camera, setCamera] = useState(null);
@@ -43,7 +43,6 @@ export default function Add({ navigation }) {
       base64: true
     });
 
-
     if (!result.cancelled) {
       setImage(result.base64);
     }
@@ -55,7 +54,7 @@ export default function Add({ navigation }) {
   if (hasCameraPermission === false || hasGalleryPermission === false) {
     return <Text>No access to camera</Text>;
   }
-  
+
   return (
       <View style={{ flex: 1, backgroundColor: '#000' }}>
           <View style={styles.cameraContainer}>
@@ -81,11 +80,11 @@ export default function Add({ navigation }) {
           </View>
           {image === null ? 
           <View style={{ margin: 1, marginBottom: 40, flex: 1,  flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-            <Button title="Next" onPress={() => navigation.navigate("Save", {image})} />
+            <Button title="Next" onPress={() => Alert.alert('You must take a picture')} />
           </View> : 
           <View style={{ margin: 1, marginBottom: 40, flex: 1,  flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <Image source={{ uri: `data:image/image;base64,${image}` }} style={{ flex: 0.2, aspectRatio: 1}} />
-            <Button title="Next" onPress={() => navigation.navigate("Save", {image})} />
+            <Button title="Next" onPress={() => props.navigation.navigate("Save", { image })} />
         </View>}
       </View>
   );
@@ -98,6 +97,6 @@ const styles = StyleSheet.create({
     },
     fixedRatio: {
         flex: 1,
-        aspectRatio: 1
+        aspectRatio: 0.7
     }
 })

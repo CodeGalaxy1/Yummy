@@ -14,15 +14,9 @@ import MainScreen from './components/Main';
 import AddScreen from './components/main/Add';
 import SaveScreen from './components/main/Save';
 import RecipeScreen from './components/main/Recipe';
+import UpdateScreen from './components/main/Update';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import rootReducer from './redux/reducers';
-import thunk from 'redux-thunk';
-
-const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const Stack = createStackNavigator();
 
@@ -82,16 +76,15 @@ class App extends Component {
      }
 
      return (
-       <Provider store={store}>
          <NavigationContainer>
            <Stack.Navigator initialRouteName="Main">
              <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
              <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation} options={{ animationEnabled: false }} />
              <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation} options={{ animationEnabled: false }}/>
              <Stack.Screen name="Recipe" component={RecipeScreen} navigation={this.props.navigation} options={{ animationEnabled: false, headerBackTitle: 'Back'}}/>
+             <Stack.Screen name="Update" component={UpdateScreen} navigation={this.props.navigation} options={{ animationEnabled: false, headerBackTitle: 'Back'}}/>
            </Stack.Navigator>
          </NavigationContainer>
-       </Provider>
      );
   }
 }

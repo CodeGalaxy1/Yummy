@@ -1,44 +1,73 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, FlatList, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Image, FlatList, Button, TouchableOpacity, Modal, Pressable, Alert } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
-import { connect } from 'react-redux';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+let user = [];
 
 function Profile(props, {navigation}) {
 
+    const [currentUser, setCurrentUser] = useState([]);
     const [userRecipes, setUserRecipes] = useState([]);
+    const [userFavorites, setUserFavorites] = useState([]);
     const [refresh, setRefresh] = useState(false);
+    const [details, setDetails] = useState(null);
     const [button, setButton] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
 
-    const { currentUser } = props;
+    const getCurrentUser = async () => {
+        let response = await AsyncStorage.getItem('currentUser')
+        let user = await JSON.parse(response)
+        setCurrentUser(user)
+        return user;
+    }
 
     useEffect(() => {
         const unsubscribe = props.navigation.addListener('focus', () => {
-            fetchRecipes()
+            fetchRecipesAndFavorites();
         });
     
         return unsubscribe;
     }, [navigation]);
 
-    const fetchRecipes = async () => {
-        setRefresh(true)
-        await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/recipes', {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-type': 'application/json'
-            },
-        }).then(res => {
-            console.log('res.status', res.status);
-            return res.json()
-        }).then(async (result) => {
-            if (result) {
-                setUserRecipes(result)
-            } else {
-                console.log('error')
-            }
-        }).finally(() => setRefresh(false))
+    const fetchRecipesAndFavorites = async () => {
+        Promise.all([
+            await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/userRecipes', {
+                method: 'GET',
+                headers: new Headers({
+                    'Accept': 'application/json; charset=UTF-8',
+                    'Content-type': 'application/json'
+                }),
+            }),
+            await fetch("http://ruppinmobile.tempdomain.co.il/site08/api/favorites", {
+                method: 'GET',
+                headers: new Headers({
+                    'Accept': 'application/json; charset=UTF-8',
+                    'Content-type': 'application/json'
+                }),
+            })
+        ]).then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
+            .then(async ([data1, data2]) => {
+
+                setRefresh(true)
+                user = await getCurrentUser();
+                let recipes = data1.filter(function(item){
+                    return item.userID === user.id;
+                })
+                
+                let favorites = data2.filter(function(item){
+                    return item.userID === user.id;
+                })
+                console.log(data2)
+                if(recipes && favorites){
+                    setUserRecipes(recipes)
+                    setUserFavorites(favorites)
+                }
+            }, (error) => {
+                console.log(error)
+            }).finally(() => setRefresh(false));
     }
 
     const switchButton = (val) => {
@@ -47,6 +76,45 @@ function Profile(props, {navigation}) {
 
     const onLogout = () => {
         AsyncStorage.removeItem('currentUser');
+    }
+
+    const updateRecipe = async() => {
+        Alert.alert(
+            'Change Recipe',
+            'Are you sure you want to change the recipe?',
+            [
+              {text: 'NO', onPress: () => props.navigation.navigate("Profile"), style: 'cancel'},
+              {text: 'YES', onPress: () => props.navigation.navigate("Update", { details })},
+            ]
+        );
+        setTimeout(() => {
+            setModalVisible(!modalVisible)
+        }, 3000);
+    }
+
+    const deleteRecipe = async () => {
+        Promise.all([
+            await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/recipes' + `/${details.recipeID}`, {
+                method: 'DELETE',
+                headers: new Headers({
+                    'Accept': 'application/json; charset=UTF-8',
+                    'Content-type': 'application/json'
+                })
+            }),
+            await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/userRecipes' + `/${details.recipeID}`, {
+                method: 'DELETE',
+                headers: new Headers({
+                    'Accept': 'application/json; charset=UTF-8',
+                    'Content-type': 'application/json'
+                })
+            })
+        ]).then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
+            .then(([data1, data2]) => {
+                console.log(data1, data2)
+                setModalVisible(!modalVisible);
+            }, (error) => {
+                console.log(error)
+            });
     }
 
     return (
@@ -76,52 +144,88 @@ function Profile(props, {navigation}) {
                 </TouchableOpacity>
             </View>
             {userRecipes && button &&
-                //  <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
-                //      <MaterialCommunityIcons name="alert-circle-outline" color={'gray'} size={100} />
-                //      <Text style={{ color: "gray", fontSize: 16 }}>You have no recipes.</Text>
-                //  </View>
-                //  :
                 <View style={styles.containerGallery}>
                     <FlatList
                         numColumns={3}
                         horizontal={false}
                         data={userRecipes}
                         refreshing={refresh}
-                        onRefresh={() => { fetchRecipes(); }}
+                        onRefresh={() => { fetchRecipesAndFavorites(); }}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
-                            <TouchableOpacity style={styles.containerImage} activeOpacity={0.9} onPress={() => props.navigation.navigate("Recipe", { item })}>
+                            <TouchableOpacity 
+                                style={styles.containerImage} 
+                                activeOpacity={0.9} onPress={() => props.navigation.navigate("Recipe", { item })} 
+                                onLongPress={() => {
+                                    setModalVisible(true);
+                                    setDetails(item);
+                                }}
+                            >
                                 <Image
                                     id={item.id}
                                     style={styles.image}
-                                    source={{ uri: `data:image/image;base64,${item.picture}` }}
+                                    source={{ uri: `data:image/image;base64,${item.recipeIMG}` }}
                                 />
                             </TouchableOpacity>
                         )}
                     />
                 </View>}
-            {userRecipes && !button &&
-                // <View style={styles.containerGallery}>
-                //     <FlatList
-                //         numColumns={3}
-                //         horizontal={false}
-                //         data={userRecipes}
-                //         refreshing={refresh}
-                //         onRefresh={() => { fetchRecipes(); }}
-                //         keyExtractor={(item, index) => index}
-                //         renderItem={({ item }) => (
-                //             <TouchableOpacity style={styles.containerImage} activeOpacity={0.9} onPress={() => props.navigation.navigate("Recipe", { item })}>
-                //                 <Image
-                //                     id={item.id}
-                //                     style={styles.image}
-                //                     source={{ uri: `data:image/image;base64,${item.picture}` }}
-                //                 />
-                //             </TouchableOpacity>
-                //         )}
-                //     />
-                // </View>
-                <Text>123</Text>
+            {userFavorites && !button &&
+                <View style={styles.containerGallery}>
+                 <FlatList
+                    numColumns={3}
+                    horizontal={false}
+                    data={userFavorites}
+                    refreshing={refresh}
+                    onRefresh={() => { fetchRecipesAndFavorites(); }}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity 
+                            style={styles.containerImage} 
+                            activeOpacity={0.9} onPress={() => props.navigation.navigate("Recipe", { item })}>
+                            <Image
+                                id={item.id}
+                                style={styles.image}
+                                source={{ uri: `data:image/image;base64,${item.recipeIMG}` }}
+                            />
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
             }
+
+            {modalVisible && <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    alert("Modal has been closed.");
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                    <Pressable
+                            style={[styles.button, styles.buttonUpdate]}
+                            onPress={() => updateRecipe()}
+                        >
+                            <Text style={styles.textStyle}>Update Recipe</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.button, styles.buttonDelete]}
+                            onPress={() => deleteRecipe()}
+                        >
+                            <Text style={styles.textStyle}>Remove Recipe</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
+                            <MaterialCommunityIcons name="close" color={'#fff'} size={26} />
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>}
         </View>
     );
 }
@@ -137,18 +241,60 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     containerImage: {
-        flex: 1/3
+        flex: 1 / 3
     },
     image: {
         flex: 1,
-        aspectRatio: 1/1,
+        aspectRatio: 1 / 1,
         margin: 0.5,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        margin: 5
+    },
+    buttonUpdate: {
+        padding: 18,
+        backgroundColor: "#fd7e14",
+    },
+    buttonDelete: {
+        padding: 18,
+        backgroundColor: "#dc3545",
+    },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
     }
 })
 
-const mapStateToProps = (store) => ({
-    currentUser: store.userState.currentUser,
-})
-
-
-export default connect(mapStateToProps, null)(Profile);
+export default Profile;

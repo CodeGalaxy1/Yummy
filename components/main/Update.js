@@ -4,15 +4,9 @@ import { View, TextInput, Image, Alert, Button } from 'react-native';
 import { ActivityIndicator, Colors } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-let user = [];
-
-function Save(props, { navigation }) {
-
-    const uri = props.route.params.image; 
+function Update(props, { navigation }) {
 
     const [isLoading, setLoading] = useState(false);
-
-    const [userID, setUserID] = useState(0);
 
     const [recipeTOKEN, setRecipeTOKEN] = useState('');
     const [recipeIMG, setRecipeIMG] = useState('');
@@ -20,57 +14,74 @@ function Save(props, { navigation }) {
     const [recipeTIME, setRecipeTIME] = useState('');
     const [recipeDESC, setRecipeDESC] = useState('');
 
+    useEffect(() => {
+        try {
+            setRecipeTOKEN(props.route.params.details.tokenUR)
+            setRecipeIMG(props.route.params.details.recipeIMG)
+        } catch (error) {
+            throw new Error(error)
+        }
+    }, [recipeTOKEN, recipeIMG]);
+
     const getCurrentUser = async () => {
         let response = await AsyncStorage.getItem('currentUser')
         let user = await JSON.parse(response)
         return user;
     }
 
-    const uploadRecipe = async () => { 
+    const UpdateRecipe = async () => { 
 
-        user = await getCurrentUser();
-        setUserID(user.id)
-        setRecipeTOKEN(user.token)
-        setRecipeIMG(props.route.params.image)
+        let user = await getCurrentUser();
+
+        const recipeID = props.route.params.details.recipeID;
+        console.log(recipeID)
+
         setLoading(true)
 
         if (recipeNAME !== '' && recipeTIME !== '' && recipeDESC !== '') {
             Promise.all([
-                await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/recipes', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json; charset=UTF-8',
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "recipeTOKEN": recipeTOKEN,
-                        "recipeIMG": recipeIMG,
-                        "recipeNAME": recipeNAME,
-                        "recipeTIME": recipeTIME,
-                        "recipeDESC": recipeDESC,
-                    })
+                await fetch("http://ruppinmobile.tempdomain.co.il/site08/api/recipes" + "/" + recipeID, {
+                method: 'PUT',
+                headers: new Headers({
+                    'Accept': 'application/json; charset=UTF-8',
+                    'Content-type': 'application/json'
                 }),
-                await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/userRecipes', {
-                    method: 'POST',
-                    headers: {
+                body: JSON.stringify({
+                    "recipeID": recipeID,
+                    "recipeTOKEN": recipeTOKEN,
+                    "recipeIMG": recipeIMG,
+                    "recipeNAME": recipeNAME,
+                    "recipeTIME": recipeTIME,
+                    "recipeDESC": recipeDESC,
+                    "likes": false
+                }),
+            }),
+                await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/userRecipes' + "/" + recipeID, {
+                    method: 'PUT',
+                    headers: new Headers({
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-type': 'application/json'
-                    },
+                    }),
                     body: JSON.stringify({
-                        "userID": userID,
-                        "tokenUR": recipeTOKEN,
+                        "userID": user.id,
+                        "recipeID": recipeID,
+                        "tokenR": recipeTOKEN,
                         "recipeIMG": recipeIMG,
                         "recipeNAME": recipeNAME,
                         "recipeTIME": recipeTIME,
                         "recipeDESC": recipeDESC,
-                    })
-                })
+                        "likes": false
+                    }),
+                }),
             ])
             .then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
             .then(([data1, data2]) => {
                 console.log(data1, data2)
                 if(data1 && data2) {
                     props.navigation.popToTop()
+                    setLoading(false)
+                }else {
+                    alert('error')
                     setLoading(false)
                 }
             }, (error) => {
@@ -83,14 +94,9 @@ function Save(props, { navigation }) {
         }
     }
 
-    //Checking the fields in the Terminal!
-    console.log(recipeNAME)
-    console.log(recipeTIME)
-    console.log(recipeDESC)
-
     return (
         <View style={{ flex: 1 }}>
-            {props.route.params.image && <Image style={{ flex: 0.3, aspectRatio: 1, alignSelf: 'center', marginTop: 10, }} source={{ uri: `data:image/image;base64, ${props.route.params.image}` }} /> }
+            <Image style={{ flex: 0.3, aspectRatio: 1, alignSelf: 'center', marginTop: 10, }} source={{ uri: `data:image/image;base64, ${props.route.params.details.recipeIMG}` }} />
             <TextInput
                 style={{margin: 10}}
                 placeholder="Name of Recipe"
@@ -108,10 +114,10 @@ function Save(props, { navigation }) {
                 onChangeText={(caption) => setRecipeDESC(caption)}
             />
             <View style={{flex:1}}>
-            {!isLoading ? <Button title="Save" onPress={() => uploadRecipe()} /> : <ActivityIndicator animating={true} color={Colors.blue500} />}
+            {!isLoading ? <Button title="Update" onPress={() => UpdateRecipe()} /> : <ActivityIndicator animating={true} color={Colors.blue500} />}
             </View>
         </View>
     );
 }
 
-export default Save;
+export default Update;
