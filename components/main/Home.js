@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, FlatList, Text, Image, Button } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Home(props, { navigation }) {
+import { connect } from 'react-redux';
+
+function Home(props, { navigation }) {
 
     const [recipes, setRecipes] = useState([]);
-    const [currentUser, setCurrentUser] = useState([]);
+    
+    const { currentUser } = props;
 
     const getCurrentUser = async () => {
         let response = await AsyncStorage.getItem('currentUser')
@@ -89,7 +92,7 @@ export default function Home(props, { navigation }) {
                 console.log(error)
             });
     }
-
+    
     const onDisLikePress = async (item) => {
         Promise.all([
             await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/favorites' + "/" + item.recipeID, {
@@ -189,3 +192,9 @@ const styles = StyleSheet.create({
         borderRadius: 4
     }
 })
+
+const mapStateToProps = (store) => ({
+    currentUser: store.userState.currentUser,
+})
+
+export default connect(mapStateToProps, null)(Home);
