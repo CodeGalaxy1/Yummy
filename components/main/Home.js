@@ -15,7 +15,6 @@ function Home(props, { navigation }) {
     const getCurrentUser = async () => {
         let response = await AsyncStorage.getItem('currentUser')
         let user = await JSON.parse(response)
-        setCurrentUser(user)
         return user;
     }
     

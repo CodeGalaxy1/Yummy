@@ -17,12 +17,6 @@ function Profile(props, {navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
 
     const { currentUser } = props;
-    
-    const getCurrentUser = async () => {
-        let response = await AsyncStorage.getItem('currentUser')
-        let user = await JSON.parse(response)
-        return user;
-    }
 
     useEffect(() => {
         fetchRecipesAndFavorites();
@@ -56,19 +50,22 @@ function Profile(props, {navigation}) {
             .then(async ([data1, data2]) => {
 
                 setRefresh(true)
-                let user = await getCurrentUser();
-                let recipes = data1.filter(function(item){
-                    return user.id === item.userID;
+
+                let recipes = await data1.filter(function(item){
+                    return currentUser.id === item.userID;
                 })
                 
-                let favorites = data2.filter(function(item){
-                    console.log(user.id === item.userID)
-                    return user.id === item.userID;
+                let favorites = await data2.filter(function(item){
+                    console.log(currentUser.id)
+                    return currentUser.id === item.userID;
                 })
 
                 if(recipes && favorites){
                     setUserRecipes(recipes)
                     setUserFavorites(favorites)
+                }else {
+                    setUserRecipes([])
+                    setUserFavorites([])
                 }
             }, (error) => {
                 console.log(error)
