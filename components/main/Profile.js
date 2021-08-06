@@ -25,6 +25,10 @@ function Profile(props, {navigation}) {
     }
 
     useEffect(() => {
+        fetchRecipesAndFavorites();
+    }, [])
+
+    useEffect(() => {
         const unsubscribe = props.navigation.addListener('focus', () => {
             fetchRecipesAndFavorites();
         });
@@ -58,6 +62,7 @@ function Profile(props, {navigation}) {
                 })
                 
                 let favorites = data2.filter(function(item){
+                    console.log(user.id === item.userID)
                     return user.id === item.userID;
                 })
 

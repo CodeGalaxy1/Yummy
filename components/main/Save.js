@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Image, Alert, Button } from 'react-native';
 
 import { ActivityIndicator, Colors } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

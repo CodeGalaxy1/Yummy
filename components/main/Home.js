@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View, FlatList, Text, Image, Button } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+let i = 0;
+
 export default function Home(props, { navigation }) {
 
     const [recipes, setRecipes] = useState([]);
     const [currentUser, setCurrentUser] = useState([]);
-    
-    useEffect(() => {
-        fetchRecipes();
-    })
 
     const getCurrentUser = async () => {
         let response = await AsyncStorage.getItem('currentUser')
@@ -19,8 +17,20 @@ export default function Home(props, { navigation }) {
         setCurrentUser(user)
         return user;
     }
+    
+    useEffect(() => {
+        fetchRecipes();
+    }, [])
 
-    const fetchRecipes = async () => {
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            fetchRecipes();
+        });
+    
+        return unsubscribe;
+    }, [navigation]);
+    
+    const fetchRecipes = async() => {
         await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/recipes', {
             method: 'GET',
             headers: {
@@ -38,7 +48,7 @@ export default function Home(props, { navigation }) {
             }
         })
     }
-
+    
     const onLikePress = async (item) => {
         await getCurrentUser();
         Promise.all([
@@ -131,9 +141,9 @@ export default function Home(props, { navigation }) {
                                  <Text style={{ paddingHorizontal: 10, paddingVertical: 10, fontSize: 18, fontWeight: '700'}}>{item.recipeNAME}</Text>
                                  <View style={styles.containerImage}>
                                      <Image
-                                         id={item.recipeID}
+                                        id={item.recipeID}
                                         style={styles.image}
-                                         source={{ uri: `data:image/image;base64,${item.recipeIMG}` }}
+                                        source={{ uri: `data:image/image;base64,${item.recipeIMG}` }}
                                      />
                                      <View style={{ paddingHorizontal: 10}}>
                                      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
