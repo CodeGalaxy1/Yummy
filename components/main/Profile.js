@@ -129,8 +129,8 @@ function Profile(props, {navigation}) {
                 <Button title="Logout" onPress={() => onLogout()}/>
             </Appbar.Header>
             <View style={styles.containerInfo}>
-                <Text style={{ margin: 5 }}>{currentUser.name}</Text>
-                <Text style={{ margin: 5 }}>{currentUser.email}</Text>
+                <Text style={{ margin: 5 }}>{currentUser !== null ? currentUser.name: null}</Text>
+                <Text style={{ margin: 5 }}>{currentUser !== null ? currentUser.email: null}</Text>
             </View>
             <View style={{ margin: 5, flexDirection: 'row', justifyContent: 'space-around' }}>
                 <TouchableOpacity style={{

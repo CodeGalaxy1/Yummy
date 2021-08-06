@@ -4,8 +4,6 @@ import { Appbar } from 'react-native-paper';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-let i = 0;
-
 export default function Home(props, { navigation }) {
 
     const [recipes, setRecipes] = useState([]);
