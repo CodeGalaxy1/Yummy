@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, FlatList, Text, Image, Button } from 'react-native';
+
+//Tags
+import { StyleSheet, View, FlatList, Text, Image, Button, TouchableOpacity } from 'react-native';
+
+//Element Header from react-native-paper library
 import { Appbar } from 'react-native-paper';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+//Redux library
 import { connect } from 'react-redux';
 
 function Home(props, { navigation }) {
 
     const [recipes, setRecipes] = useState([]);
-    
     const { currentUser } = props;
-
-    const getCurrentUser = async () => {
-        let response = await AsyncStorage.getItem('currentUser')
-        let user = await JSON.parse(response)
-        return user;
-    }
     
     useEffect(() => {
         fetchRecipes();
-    }, [])
+    }, [recipes])
 
     useEffect(() => {
         const unsubscribe = props.navigation.addListener('focus', () => {
@@ -50,8 +46,7 @@ function Home(props, { navigation }) {
     }
     
     const onLikePress = async (item) => {
-        await getCurrentUser();
-        Promise.all([
+        await Promise.all([
             await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/favorites', {
                 method: 'POST',
                 headers: new Headers({
@@ -125,6 +120,24 @@ function Home(props, { navigation }) {
             });
     }
 
+    const LikeButton = ({ onPress }) => (
+        <TouchableOpacity onPress={onPress}>
+          <Image
+            source={require("../../assets/Like.png")}
+            style={{ marginTop: 5, width: 40, height: 40}}
+          />
+        </TouchableOpacity>
+      );
+    
+      const DisLikeButton = ({ onPress, title }) => (
+        <TouchableOpacity onPress={onPress}>
+          <Image
+            source={require("../../assets/DisLike.png")}
+            style={{ marginTop: 5, width: 40, height: 40}}
+          />
+        </TouchableOpacity>
+      );
+
     return (
         <View style={styles.container}>
             <Appbar.Header style={{ backgroundColor: '#fff' }}>
@@ -149,17 +162,17 @@ function Home(props, { navigation }) {
                                      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                          <View style={{ flexDirection: 'row', alignItems: 'center' }} >
                                          {item.likes ? 
-                                         <Button
+                                         <LikeButton
                                             title="DisLike"
                                             onPress={() => onDisLikePress(item)}
                                          />
                                          :
-                                         <Button
+                                         <DisLikeButton
                                             title="Like"
                                             onPress={() => onLikePress(item)}
                                          />}
                                          </View>
-                                        <Button title="Storie" onPress={() => props.navigation.navigate("Recipe", { item })} />
+                                        <Button title="Full Recipe" onPress={() => props.navigation.navigate("Recipe", { item })} />
                                      </View>
                                      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', margin: 5, marginBottom: 10 }}>
                                          <Text>{(item.recipeDESC.length > 40) ? (((item.recipeDESC).substring(0, 40 - 3)) + '...') : item.recipeDESC}</Text>
@@ -175,6 +188,7 @@ function Home(props, { navigation }) {
     );
 }
 
+//Css
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
+
+//Tags
 import { StyleSheet, Text, View, Button, Image, Alert } from 'react-native';
 
+//Expo - vector-icons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+//Expo - camera
 import { Camera } from 'expo-camera';
+
+//Expo - image-picker
 import * as ImagePicker from 'expo-image-picker';
 
+
+//Functional Component(Add)
 export default function Add(props, { navigation }) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -13,11 +21,14 @@ export default function Add(props, { navigation }) {
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
 
+  //Permissions
   useEffect(() => {
     (async () => {
+      //Permission to camera
       const cameraStatus = await Camera.requestPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === 'granted');
 
+      //Permission to gallery
       const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus.status === 'granted');
 
@@ -27,8 +38,8 @@ export default function Add(props, { navigation }) {
   const takePicture = async () => {
       if (camera) {
           const data = await camera.takePictureAsync({
-            quality: 0.1,
-            base64: true
+            quality: 0.1, //Specify the quality of compression
+            base64: true //Format
           });
           setImage(data.base64);
       }
@@ -36,7 +47,7 @@ export default function Add(props, { navigation }) {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, //MediaTypeOptions.Images - gives only the images.
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.1,
@@ -90,6 +101,7 @@ export default function Add(props, { navigation }) {
   );
 }
 
+//Css
 const styles = StyleSheet.create({
     cameraContainer:{
         flex: 1,

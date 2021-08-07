@@ -1,5 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { USER_STATE_CHANGE, CLEAR_DATA } from "../constants/index";
+
+//AsyncStorage plugin
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const checkResponse = async () => {
     let response = await AsyncStorage.getItem('currentUser')
@@ -7,9 +9,11 @@ const checkResponse = async () => {
     return user;
 }
 
+//Asynchronous "actions"
+
 export function clearData() {
-    return ((dispatch) => {
-        dispatch({type: CLEAR_DATA})
+    return (async (dispatch) => {
+        await dispatch({type: CLEAR_DATA})
     })
 }
 

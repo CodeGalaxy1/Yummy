@@ -1,9 +1,12 @@
 import React, { useRef } from 'react';
+
+//Tags
 import { StyleSheet, View, Text, Animated} from 'react-native';
 
+//Functional Component(Recipe)
 export default function Recipe(props) {
-
     const scrollA = useRef(new Animated.Value(0)).current;
+
     return (
         <View>
             <Animated.ScrollView
@@ -32,6 +35,7 @@ export default function Recipe(props) {
     );
 }
 
+//Css
 const styles = StyleSheet.create({
     bannerContainer: {
         marginTop: -1000,

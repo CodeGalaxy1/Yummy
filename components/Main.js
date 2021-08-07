@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 
+//Navigation(Tab) plugin
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+
+//Expo - vector-icons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import HomeScreen from './main/Home';
-import ProfileScreen from './main/Profile';
-
+//Redux library
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
 import { fetchUser, clearData } from '../redux/actions/index';
+
+//Screens
+import HomeScreen from './main/Home';
+import ProfileScreen from './main/Profile';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -16,6 +22,7 @@ const EmptyScreen = () => {
     return(null)
 }
 
+//Class Component(Main)
 class Main extends Component {
     constructor(props) {
         super(props);
@@ -60,10 +67,19 @@ class Main extends Component {
     }
 }
 
-const mapStateToProps = (store) => ({
-    currentUser: store.userState.currentUser
-})
+// const mapStateToProps = (store) => ({
+//     currentUser: store.userState.currentUser
+// })
 
+/*
+----- bindActionCreators -----
+Gets actionCreators(Function or Object) and dispatch.
+*/
 const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser, clearData}, dispatch );
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+/*
+"connect function gets 2 functions"
+first funciton(mapStateToProps) - Connects the "state"
+second function(mapDispatchToProps) - It connects redux operations to accessory reactions
+*/
+export default connect(null, mapDispatchToProps)(Main);

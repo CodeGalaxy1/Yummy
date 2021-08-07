@@ -1,9 +1,15 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
+
+//Tags
 import { View, Button, TextInput, Alert } from 'react-native';
 
+//AsyncStorage plugin
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+//Create a unique ID library
 import uuid from 'react-native-uuid';
 
+//Class Component(Register)
 export default class Register extends Component {
     constructor(props) {
         super(props);
@@ -58,19 +64,16 @@ export default class Register extends Component {
     storeUserData = async (user) => {
         try {
             const currentUser = user;
+            
+            //Puts the user in storage
             await AsyncStorage.setItem('currentUser', JSON.stringify(currentUser));
         } catch (e) {
-            // saving error
+            //Saving error
             console.log("Data error.")
         }
     }
 
     render() {
-
-        //Checking the fields in the Terminal!
-        console.log(this.state.name)
-        console.log(this.state.email)
-        console.log(this.state.password)
 
         return (
             <View>

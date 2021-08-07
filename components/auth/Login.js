@@ -1,7 +1,14 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
+
+//Tags
 import { View, Button, TextInput, Alert } from 'react-native';
 
+//AsyncStorage plugin
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { GlobalStyle } from "../../styles/Global";
+
+//Class Component(Login)
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -46,19 +53,18 @@ export default class Login extends Component {
 
     storeUserData = async (currentUser) => {
         try {
+            //Before, Remove user from storage
             await AsyncStorage.removeItem('currentUser');
+
+            //After, Puts the user in storage
             await AsyncStorage.setItem('currentUser', JSON.stringify(currentUser));
         } catch (e) {
-            // saving error
+            //Saving error
             console.log("Data error.")
         }
     }
 
     render() {
-
-        //Checking the fields in the Terminal!
-        console.log(this.state.email)
-        console.log(this.state.password)
 
         return (
             <View>

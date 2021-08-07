@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Image, Alert, Button } from 'react-native';
 
+//Tags
+import { View, TextInput, Image, Alert, Button, Picker, ScrollView } from 'react-native';
+
+//Element - react-native-paper
 import { ActivityIndicator, Colors } from 'react-native-paper';
+
+//AsyncStorage plugin
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+//Functional Component(Update)
 function Update(props, { navigation }) {
 
     const [isLoading, setLoading] = useState(false);
+    const [selectedValue, setSelectedValue] = useState("min");
 
     const [recipeTOKEN, setRecipeTOKEN] = useState('');
     const [recipeIMG, setRecipeIMG] = useState('');
@@ -95,29 +102,55 @@ function Update(props, { navigation }) {
     }
 
     return (
-        <View style={{ flex: 1 }}>
-            <Image style={{ flex: 0.3, aspectRatio: 1, alignSelf: 'center', marginTop: 10, }} source={{ uri: `data:image/image;base64, ${props.route.params.details.recipeIMG}` }} />
-            <TextInput
-                style={{margin: 10}}
-                placeholder="Name of Recipe"
-                onChangeText={(name) => setRecipeNAME(name)}
-            />
-            <TextInput
-                style={{margin: 10}}
-                placeholder="Time(Around)"
-                keyboardType="numeric"
-                onChangeText={(time) => setRecipeTIME(time)}
-            />
-            <TextInput
-                style={{margin: 10}}
-                placeholder="Write how to prepare..."
-                onChangeText={(caption) => setRecipeDESC(caption)}
-            />
-            <View style={{flex:1}}>
-            {!isLoading ? <Button title="Update" onPress={() => UpdateRecipe()} /> : <ActivityIndicator animating={true} color={Colors.blue500} />}
+<ScrollView contentContainerStyle={{ flexGrow: 1, height: 1000 }}
+            keyboardShouldPersistTaps='handled'
+        >
+            <View style={{ flex: 1, flexDirection: 'column' }}>
+                {props.route.params.details.recipeIMG && <Image style={{ flex: 1, aspectRatio: 1, alignSelf: 'center', marginTop: 10, }} source={{ uri: `data:image/image;base64, ${props.route.params.details.recipeIMG}` }} />}
+                <View style={{ margin: 10, textAlign: 'left' }}>
+                    <TextInput
+                        style={{ margin: 10, padding: 20, borderWidth: 1 }}
+                        placeholder="Name of Recipe"
+                        onChangeText={(name) => setRecipeNAME(name)}
+                    />
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <TextInput
+                            style={{ margin: 10, padding: 20, borderWidth: 1, width: 150 }}
+                            placeholder="Time(Around)"
+                            keyboardType="numeric"
+                            maxLength={2}
+                            onChangeText={(time) => setRecipeTIME(time + ' ' + selectedValue)}
+                        />
+                        <Picker
+                            selectedValue={selectedValue}
+                            style={{ width: 180, height: 44 }}
+                            itemStyle={{ height: 44 }}
+                            onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                        >
+                            <Picker.Item label="sec" value="sec" />
+                            <Picker.Item label="min" value="min" />
+                            <Picker.Item label="hour" value="hour" />
+                        </Picker>
+                    </View>
+                    <TextInput
+                        style={{ margin: 10, padding: 20, paddingTop: 20, height: 200, borderWidth: 1 }}
+                        onChangeText={(caption) => setRecipeDESC(caption)}
+                        underlineColorAndroid="transparent"
+                        placeholder="Write how to prepare..."
+                        numberOfLines={1}
+                        multiline={true}
+                    />
+                </View>
+                <View style={{flex:1}}>
+                    {!isLoading ? <Button title="Update" onPress={() => UpdateRecipe()} /> : <ActivityIndicator animating={true} color={Colors.blue500} />}
+                </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
 export default Update;
+
+{/* <View style={{flex:1}}>
+{!isLoading ? <Button title="Update" onPress={() => UpdateRecipe()} /> : <ActivityIndicator animating={true} color={Colors.blue500} />}
+</View> */}
