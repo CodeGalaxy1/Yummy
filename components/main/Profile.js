@@ -133,10 +133,16 @@ function Profile(props, {navigation}) {
     return (
 
         <View style={styles.container}>
-            <Appbar.Header style={{ backgroundColor: '#fff' }}>
-                <Appbar.Content title={<Text style={{fontWeight: '600'}}>Profile</Text>}/>
-                <Button title="Logout" onPress={() => onLogout()}/>
+             <View style={{backgroundColor: '#FFF'}}>
+             <View style={{paddingTop:50, backgroundColor: '#FFF' }}>
+            <Appbar.Header style={{ marginTop:40,backgroundColor: '#e6f2ff' }}>
+                <Appbar.Content style={{paddingBottom:50}} title={<Text style={{fontWeight: '600'}}>Profile</Text>}/>
+                <View style={{paddingBottom:50}}>
+                <Button style={{}} title="Logout" onPress={() => onLogout()}/>
+                </View>
             </Appbar.Header>
+         
+             </View>
             <View style={styles.containerInfo}>
                 <Text style={{ margin: 5 }}>{currentUser !== undefined ? currentUser.name: undefined}</Text>
                 <Text style={{ margin: 5 }}>{currentUser !== undefined ? currentUser.email: undefined}</Text>
@@ -156,6 +162,7 @@ function Profile(props, {navigation}) {
                     onPress={() => switchButton(false)}>
                     <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '500', color: button ? 'gray' : '#000' }}>Favorites</Text>
                 </TouchableOpacity>
+                </View>
             </View>
 
             {/*----- My Recipes -----*/}

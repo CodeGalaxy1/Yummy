@@ -14,13 +14,22 @@ export const GlobalStyle = StyleSheet.create({
   //----- Titles -----
   //start page
   innerBox: {
-    backgroundColor: "#cceeff",
+
     padding: 20,
     paddingTop: 20,
     alignItems: "center",
   },
   buttonInBox: {
     paddingBottom: 20,
+  },
+  boxLanding: {
+    flex: 1,
+ 
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    width: "100%",
+   
   },
   //Header Home Page(HEHome)
   headerHomePage: {
@@ -150,14 +159,7 @@ export const GlobalStyle = StyleSheet.create({
     paddingLeft: 40,
   },
   //login content container
-  boxLanding: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    width: "100%",
-    backgroundColor: "#0099e6",
-  },
+
   box: {
     flex: 1,
     justifyContent: "center",

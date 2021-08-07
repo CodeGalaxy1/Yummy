@@ -1,13 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 //Tags
-import { View, Button, TextInput, Alert } from 'react-native';
+import { View, Button, TextInput, Alert ,StyleSheet, Text, TouchableOpacity } from "react-native";
 
 //AsyncStorage plugin
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Create a unique ID library
 import uuid from 'react-native-uuid';
+
+
+//style
+import { GlobalStyle } from "../../styles/Global";
+
 
 //Class Component(Register)
 export default class Register extends Component {
@@ -72,31 +77,95 @@ export default class Register extends Component {
             console.log("Data error.")
         }
     }
+    
+    validateForm =  async () => {
+        let pattern =
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        let mailChk = pattern.test(String(this.state.email).toLowerCase());
+        pattern = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,14}/;
+        let passChk = pattern.test(String(this.state.password));
+        if (
+          passChk == true &&
+          mailChk == true &&
+          this.state.name != null &&
+          this.state.password == this.state.confirmPassword
+        ) 
+        {
+          this.setState({msg:""});
+          this.onSignUp()
+        } 
+        else   
+        {
+            console.log(mailChk)
+            console.log(passChk)
+            console.log(this.state.name)
+            console.log('password '+this.state.password)
+            console.log('confirm password '+this.state.confirmPassword)
+        
+         this.setState({msg:"Error,wrong entries or not full"})
+        }
+      };
 
+      
     render() {
-
-        return (
-            <View>
-                <TextInput
-                    placeholder="name"
-                    onChangeText={(name) => this.setState({ name })}
-                />
-                <TextInput
-                    placeholder="email"
-                    keyboardType="email-address"
-                    onChangeText={(email) => this.setState({ email })}
-                />
-                <TextInput
-                    placeholder="password"
-                    secureTextEntry={true}
-                    onChangeText={(password) => this.setState({ password })}
-                />
-
-                <Button
-                    onPress={() => this.onSignUp()}
-                    title="Sign Up"
-                />
+   
+          const BackButton = ({ onPress, title }) => (
+            <View style={GlobalStyle.appButtonContainer}>
+              <TouchableOpacity
+                style={{ backgroundColor: "#80dfff" }}
+                onPress={onPress}
+              >
+                <Text style={GlobalStyle.appButtonText}>{title}</Text>
+              </TouchableOpacity>
             </View>
+          );
+          const AppButton = ({ onPress, title }) => (
+            <TouchableOpacity
+              style={GlobalStyle.appButtonContainer}
+              onPress={onPress}
+            >
+              <Text style={GlobalStyle.appButtonText}>{title}</Text>
+            </TouchableOpacity>
+          );
+        return (
+            <View style={GlobalStyle.box}>
+            <View style={{ marginBottom: 150, alignItems: "center" }}>
+              <Text style={GlobalStyle.HeadTextRegister}>CREATE AN ACCOUNT</Text>
+              <TextInput
+                placeholder="full Name"
+                style={GlobalStyle.input}
+                onChangeText={(name) => this.setState({ name })}
+              />
+              <TextInput
+                placeholder="Email"
+                style={GlobalStyle.input}
+                keyboardType="email-address"
+                onChangeText={(email) => this.setState({ email })}
+              />
+              <TextInput
+                placeholder="Password"
+                style={GlobalStyle.input}
+                secureTextEntry={true}
+                onChangeText={(password) => this.setState({ password })}
+              />
+              <TextInput placeholder="Confirm Password"
+               style={GlobalStyle.input}
+               secureTextEntry={true}
+               onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
+                />
+              <AppButton
+                style={GlobalStyle.Button}
+                title="Sign up"
+                onPress={() => this.validateForm()}
+              />
+              <Text>{"\n"}</Text>
+              <BackButton title="go back"   onPress={() => this.props.navigation.navigate('Landing')} />
+              <Text style={{ fontSize: 15, color: "red" }}>{this.state.msg}</Text>
+            </View>
+          </View>
+            
         );
     }
 }
+
+
