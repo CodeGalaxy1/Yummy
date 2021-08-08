@@ -25,6 +25,11 @@ function Home(props, { navigation }) {
     
         return unsubscribe;
     }, [navigation]);
+
+    useEffect(() => {
+        return () => {
+        };
+      }, [recipes]);
     
     const fetchRecipes = async() => {
         await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/recipes', {

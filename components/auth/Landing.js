@@ -13,7 +13,6 @@ const AppButton = ({ onPress, title }) => (
 
 export default function Landing({ navigation }) {
     return (
-
         <ImageBackground source={require('../../assets/background.png')} resizeMode="cover" style={{ flex: 1, flexDirection: 'column' , justifyContent: 'center', alignItems: 'center' }}>
         <View style={{ marginBottom: 500,}}>
           <Text style={{ fontSize: 30, fontWeight: "700", textAlign: 'center' , color: 'black'}}>Welcome To</Text>
