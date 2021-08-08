@@ -95,7 +95,7 @@ export default class Login extends Component {
       <View style={{flex: 1}}>
         <View style={{flex: 1, flexDirection: "column", backgroundColor: '#cfeefa'}}>
           <Text style={{ marginTop: 70, fontSize: 40, fontWeight: "700", textAlign: "left", marginLeft: 30}}>SIGN UP,</Text>
-          <View style={{ flexDirection: "row", justifyContent: "left", marginLeft: 30}}>
+          <View style={{ flexDirection: "row", justifyContent: "center", marginLeft: 30}}>
             <Text style={{ color: "black", fontSize: 18, fontWeight: "500"}}>Yummy</Text>
             <Text style={{ color: "cornflowerblue", fontSize: 18, fontWeight: "500"}}>Recipes</Text>
           </View>
