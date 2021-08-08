@@ -29,7 +29,6 @@ function Save(props, { navigation }) {
 
     useEffect(() => {
         try {
-            props.fetchUser()
             setRecipeIMG(props.route.params.image)
             setUserID(props.currentUser.id)
             setRecipeTOKEN(props.currentUser.token)
@@ -143,6 +142,4 @@ const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
 })
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser}, dispatch );
-
-export default connect(mapStateToProps, mapDispatchToProps)(Save)
+export default connect(mapStateToProps, null)(Save)

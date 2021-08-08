@@ -150,7 +150,3 @@ function Update(props, { navigation }) {
 }
 
 export default Update;
-
-{/* <View style={{flex:1}}>
-{!isLoading ? <Button title="Update" onPress={() => UpdateRecipe()} /> : <ActivityIndicator animating={true} color={Colors.blue500} />}
-</View> */}

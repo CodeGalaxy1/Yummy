@@ -25,7 +25,7 @@ export default function Recipe(props) {
                 <Text style={{fontStyle: 'italic', fontWeight: '700'}}>Time: <Text style={{fontWeight: '400'}}>{props.route.params.item.recipeTIME}</Text></Text>
                 </View>
                 <View style={{margin: 20}}>
-                <Text style={{fontStyle: 'italic', fontWeight: '700'}}>Way And Components:</Text>
+                <Text style={{fontStyle: 'italic', fontWeight: '700'}}>How To Prepare And Ingredients: </Text>
                     <Text style={styles.text}>
                         {props.route.params.item.recipeDESC}
                     </Text>

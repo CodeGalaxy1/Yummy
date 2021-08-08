@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from 'react';
-
-//Tags
 import { StyleSheet, View, Text, Image, FlatList, Button, TouchableOpacity, Modal, Pressable, Alert } from 'react-native';
-
-//Element Header from react-native-paper library
 import { Appbar } from 'react-native-paper';
 
-//Expo - vector-icons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-//AsyncStorage plugin
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//Redux library
 import { connect } from 'react-redux';
 
-//Functional Component(Profile)
 function Profile(props, {navigation}) {
 
     const [userRecipes, setUserRecipes] = useState([]);
@@ -24,6 +15,7 @@ function Profile(props, {navigation}) {
     const [details, setDetails] = useState(null);
     const [button, setButton] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
+
     const { currentUser } = props;
 
     useEffect(() => {
@@ -39,7 +31,7 @@ function Profile(props, {navigation}) {
     }, [navigation]);
 
     const fetchRecipesAndFavorites = async () => {
-        await Promise.all([
+        Promise.all([
             await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/userRecipes', {
                 method: 'GET',
                 headers: new Headers({
@@ -59,12 +51,10 @@ function Profile(props, {navigation}) {
 
                 setRefresh(true)
 
-                //Filter the information (recipes) of the current user
                 let recipes = await data1.filter(function(item){
                     return currentUser.id === item.userID;
                 })
                 
-                //Filter the information (favorite) of the current user
                 let favorites = await data2.filter(function(item){
                     return currentUser.id === item.userID;
                 })
@@ -81,12 +71,10 @@ function Profile(props, {navigation}) {
             }).finally(() => setRefresh(false));
     }
 
-    //Buttons - My recipes or Favorites
     const switchButton = (val) => {
         setButton(val);
     }
 
-    //Logout
     const onLogout = () => {
         AsyncStorage.removeItem('currentUser');
     }
@@ -106,7 +94,7 @@ function Profile(props, {navigation}) {
     }
 
     const deleteRecipe = async () => {
-        await Promise.all([
+        Promise.all([
             await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/recipes' + `/${details.recipeID}`, {
                 method: 'DELETE',
                 headers: new Headers({
@@ -123,7 +111,6 @@ function Profile(props, {navigation}) {
             })
         ]).then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
             .then(([data1, data2]) => {
-                console.log(data1, data2)
                 setModalVisible(!modalVisible);
             }, (error) => {
                 console.log(error)
@@ -131,18 +118,11 @@ function Profile(props, {navigation}) {
     }
 
     return (
-
         <View style={styles.container}>
-             <View style={{backgroundColor: '#FFF'}}>
-             <View style={{paddingTop:50, backgroundColor: '#FFF' }}>
-            <Appbar.Header style={{ marginTop:40,backgroundColor: '#e6f2ff' }}>
-                <Appbar.Content style={{paddingBottom:50}} title={<Text style={{fontWeight: '600'}}>Profile</Text>}/>
-                <View style={{paddingBottom:50}}>
-                <Button style={{}} title="Logout" onPress={() => onLogout()}/>
-                </View>
+            <Appbar.Header style={{ backgroundColor: '#fff' }}>
+                <Appbar.Content title={<Text style={{fontWeight: '600'}}>Profile</Text>}/>
+                <Button title="Logout" onPress={() => onLogout()}/>
             </Appbar.Header>
-         
-             </View>
             <View style={styles.containerInfo}>
                 <Text style={{ margin: 5 }}>{currentUser !== undefined ? currentUser.name: undefined}</Text>
                 <Text style={{ margin: 5 }}>{currentUser !== undefined ? currentUser.email: undefined}</Text>
@@ -162,10 +142,7 @@ function Profile(props, {navigation}) {
                     onPress={() => switchButton(false)}>
                     <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '500', color: button ? 'gray' : '#000' }}>Favorites</Text>
                 </TouchableOpacity>
-                </View>
             </View>
-
-            {/*----- My Recipes -----*/}
             {userRecipes && button &&
                 <View style={styles.containerGallery}>
                     <FlatList
@@ -193,8 +170,6 @@ function Profile(props, {navigation}) {
                         )}
                     />
                 </View>}
-
-            {/*----- Favorites -----*/}
             {userFavorites && !button &&
                 <View style={styles.containerGallery}>
                  <FlatList
@@ -219,7 +194,6 @@ function Profile(props, {navigation}) {
             </View>
             }
 
-            {/*----- Modal -----*/}
             {modalVisible && <Modal
                 animationType="fade"
                 transparent={true}
@@ -244,7 +218,7 @@ function Profile(props, {navigation}) {
                             <Text style={styles.textStyle}>Remove Recipe</Text>
                         </Pressable>
                         <Pressable
-                            style={[styles.buttonX, styles.buttonClose]}
+                            style={[styles.button, styles.buttonClose]}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
                             <MaterialCommunityIcons name="close" color={'#fff'} size={26} />
@@ -253,11 +227,9 @@ function Profile(props, {navigation}) {
                 </View>
             </Modal>}
         </View>
-
     );
 }
 
-//Css
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -298,13 +270,7 @@ const styles = StyleSheet.create({
         elevation: 5
     },
     button: {
-        borderRadius: 10,
-        padding: 10,
-        elevation: 2,
-        margin: 5
-    },
-    buttonX: {
-        borderRadius: 50,
+        borderRadius: 20,
         padding: 10,
         elevation: 2,
         margin: 5

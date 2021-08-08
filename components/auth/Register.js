@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 //Tags
-import { View, Button, TextInput, Alert ,StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, TextInput, Alert, Text, TouchableOpacity } from "react-native";
 
 //AsyncStorage plugin
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -9,10 +9,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 //Create a unique ID library
 import uuid from 'react-native-uuid';
 
-
 //style
 import { GlobalStyle } from "../../styles/Global";
-
 
 //Class Component(Register)
 export default class Register extends Component {
@@ -78,12 +76,13 @@ export default class Register extends Component {
         }
     }
     
-    validateForm =  async () => {
-        let pattern =
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        let mailChk = pattern.test(String(this.state.email).toLowerCase());
-        pattern = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,14}/;
-        let passChk = pattern.test(String(this.state.password));
+    validateForm = async () => {
+        let patternEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        let mailChk = patternEmail.test(String(this.state.email).toLowerCase());
+
+        let patternPassword = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,14}/;
+        let passChk = patternPassword.test(String(this.state.password));
+
         if (
           passChk == true &&
           mailChk == true &&
@@ -96,12 +95,6 @@ export default class Register extends Component {
         } 
         else   
         {
-            console.log(mailChk)
-            console.log(passChk)
-            console.log(this.state.name)
-            console.log('password '+this.state.password)
-            console.log('confirm password '+this.state.confirmPassword)
-        
          this.setState({msg:"Error,wrong entries or not full"})
         }
       };
@@ -110,15 +103,14 @@ export default class Register extends Component {
     render() {
    
           const BackButton = ({ onPress, title }) => (
-            <View style={GlobalStyle.appButtonContainer}>
               <TouchableOpacity
-                style={{ backgroundColor: "#80dfff" }}
+                style={GlobalStyle.appButtonContainer}
                 onPress={onPress}
               >
                 <Text style={GlobalStyle.appButtonText}>{title}</Text>
               </TouchableOpacity>
-            </View>
           );
+
           const AppButton = ({ onPress, title }) => (
             <TouchableOpacity
               style={GlobalStyle.appButtonContainer}
@@ -127,10 +119,12 @@ export default class Register extends Component {
               <Text style={GlobalStyle.appButtonText}>{title}</Text>
             </TouchableOpacity>
           );
+
         return (
-            <View style={GlobalStyle.box}>
-            <View style={{ marginBottom: 150, alignItems: "center" }}>
-              <Text style={GlobalStyle.HeadTextRegister}>CREATE AN ACCOUNT</Text>
+            <View style={{flex: 1 }}>
+            <View style={{flex: 1, flexDirection: "column", backgroundColor: '#cfeefa'}}>
+              <Text style={{ marginTop: 70, fontSize: 40, fontWeight: "900", textAlign: "center" }}>CREATE AN ACCOUNT</Text>
+              <View style={{ margin: 30, marginTop: 30}}>
               <TextInput
                 placeholder="full Name"
                 style={GlobalStyle.input}
@@ -153,13 +147,15 @@ export default class Register extends Component {
                secureTextEntry={true}
                onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
                 />
+              </View>
+
               <AppButton
-                style={GlobalStyle.Button}
-                title="Sign up"
+                title="Sign Up"
                 onPress={() => this.validateForm()}
               />
+              
               <Text>{"\n"}</Text>
-              <BackButton title="go back"   onPress={() => this.props.navigation.navigate('Landing')} />
+              <BackButton title="GO BACK" onPress={() => this.props.navigation.navigate('Landing')} />
               <Text style={{ fontSize: 15, color: "red" }}>{this.state.msg}</Text>
             </View>
           </View>

@@ -78,7 +78,7 @@ function Home(props, { navigation }) {
                     "recipeDESC": item.recipeDESC,
                     "likes": true
                 }),
-            })
+            }),
         ]).then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
             .then(([data1, data2]) => {
                 console.log(data1, data2)
@@ -162,12 +162,12 @@ function Home(props, { navigation }) {
                                      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                          <View style={{ flexDirection: 'row', alignItems: 'center' }} >
                                          {item.likes ? 
-                                         <LikeButton
+                                         <DisLikeButton
                                             title="DisLike"
                                             onPress={() => onDisLikePress(item)}
                                          />
                                          :
-                                         <DisLikeButton
+                                         <LikeButton
                                             title="Like"
                                             onPress={() => onLikePress(item)}
                                          />}
