@@ -156,7 +156,7 @@ export default class Register extends Component {
               
               <Text>{"\n"}</Text>
               <BackButton title="GO BACK" onPress={() => this.props.navigation.navigate('Landing')} />
-              <Text style={{ fontSize: 15, color: "red" }}>{this.state.msg}</Text>
+              <Text style={{ fontSize: 15, color: "red", textAlign: "center"}}>{this.state.msg}</Text>
             </View>
           </View>
             
