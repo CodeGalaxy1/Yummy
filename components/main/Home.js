@@ -16,7 +16,7 @@ function Home(props, { navigation }) {
     
     useEffect(() => {
         fetchRecipes();
-    }, [recipes])
+    }, [])
 
     useEffect(() => {
         const unsubscribe = props.navigation.addListener('focus', () => {
@@ -25,11 +25,6 @@ function Home(props, { navigation }) {
     
         return unsubscribe;
     }, [navigation]);
-
-    useEffect(() => {
-        return () => {
-        };
-      }, [recipes]);
     
     const fetchRecipes = async() => {
         await fetch('http://ruppinmobile.tempdomain.co.il/site08/api/recipes', {
